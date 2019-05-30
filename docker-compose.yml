@@ -2,27 +2,28 @@ version: '2'
 
 services:
   sample_app:
-    image: gridappsd/sample_app
+    image: sample-app
     environment:
       GRIDAPPSD_URI: tcp://gridappsd:61613
   #    GRIDAPPSD_USER: system
   #    GRIDAPPSD_PASS: manager
     depends_on:
       - gridappsd 
-    #volumes:
+    volumes:
       # Change upto the : where you have your git repository on your
       # computer.  The : delinates between the host (your computer) and
       # the container (inside of the container)  
       #
       # In order for the app to be registered with gridappsd a configuration
       # file must be mounted or copied to /appconfig
-      # - $HOME/git/gridappsd-sample-app/sample_app.config:/appconfig
+       - ~/git/gridappsd-sample-app/sample_app.config:/appconfig
 
       # When debugging apps it is helpful to mount the application over the
       # top of where it normally be ran so that changes on the host are immediately
       # reflected inside the container.
       #
-      #- $HOME/git/gridappsd-sample-app/:/usr/src/gridappsd-sample
+       - ~/git/gridappsd-sample-app/:/usr/src/gridappsd-sample
+      
   blazegraph:
     image: gridappsd/blazegraph${GRIDAPPSD_TAG}
     ports:
@@ -90,9 +91,9 @@ services:
 # repository.  Once uncommenting the three lines below the sample_app will be available in the
 # container
 #
-#    volumes:
-#      - ~/git/gridappsd-sample-app/sample_app:/gridappsd/applications/sample_app
-#      - ~/git/gridappsd-sample-app/sample_app/sample_app.config:/gridappsd/applications/sample_app.config
+    volumes:
+      - ~/git/gridappsd-dnp3/dnp3:/gridappsd/services/dnp3
+      - ~/git/gridappsd-dnp3/dnp3/dnp3.config:/gridappsd/services/dnp3.config
 
     depends_on:
       - mysql
@@ -100,7 +101,7 @@ services:
       - redis
 
   proven:
-    image: pnnl/proven:latest
+    image: gridappsd/proven${GRIDAPPSD_TAG}
     ports:
       - 18080:8080
     environment:
